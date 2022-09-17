@@ -15,11 +15,17 @@ def get_word():
 def run():
     word = normalize(get_word()).upper()
     search_word = len(word) * "_ "
+    letter_used = []
     while word != search_word.replace(" ", ""):
         os.system("cls")
         print("Adivina la palabra")
         print(search_word)
-        letter = normalize(input('Ingresa un carácter: ')).upper()
+        if len(letter_used) > 0:
+            print("Letras usadas: ")
+            print(letter_used)
+        letter = normalize(input('Ingresa una letra: ')).upper()
+        if not letter in letter_used:
+            letter_used.append(letter)
         if letter in word:
             search_word = list(search_word.replace(" ",""))
             for index, value in enumerate(word):
