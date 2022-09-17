@@ -1,58 +1,33 @@
 import os
 import random
 
-def normalize(s):
-    replacements = (
-        ("á", "a"),
-        ("é", "e"),
-        ("í", "i"),
-        ("ó", "o"),
-        ("ú", "u"),
-    )
+def normalize(string):
+    replacements = (("á", "a"), ("é", "e"), ("í", "i"), ("ó", "o"), ("ú", "u"))
     for a, b in replacements:
-        s = s.replace(a, b).replace(a.upper(), b.upper())
-    return s
+        string = string.replace(a, b).replace(a.upper(), b.upper())
+    return string
 
 def get_word():
-    words = []
     with open("./data.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            words.append(normalize(line.replace("\n", "").upper()))
+        words = [line.replace("\n", "") for line in f]
     return random.choice(words)
 
 def run():
-    word = list(get_word())
-    letter = ""
-    find_letters = []
-    while True:
+    word = normalize(get_word()).upper()
+    search_word = len(word) * "_ "
+    while word != search_word.replace(" ", ""):
         os.system("cls")
-        remaining_letters = ""
         print("Adivina la palabra")
-        for i in word:
-            aux_find = False
-            for j in find_letters:
-                if j == i:
-                    remaining_letters += f"{j} "
-                    aux_find = True
-                    break
-            #else:
-            if not aux_find:
-                remaining_letters += "_ "
-        print(remaining_letters)
-        try:
-            if remaining_letters.index("_") >= 0:
-                pass
-        except Exception as e:
-            result = "".join(word)
-            os.system("cls")
-            print(f"¡Ganaste! La palabra es {result}")
-            break
-        letter = input('Ingresa un carácter: ').upper()
-        try:
-            if word.index(letter) >= 0:
-                find_letters.append(letter)
-        except Exception as e:
-            pass
+        print(search_word)
+        letter = normalize(input('Ingresa un carácter: ')).upper()
+        if letter in word:
+            search_word = list(search_word.replace(" ",""))
+            for index, value in enumerate(word):
+                if value == letter:
+                    search_word[index] = letter
+            search_word = " ".join(search_word)
+    os.system("cls")
+    print(f"¡Ganaste! La palabra es {word}")
 
 
 if __name__ == "__main__":
